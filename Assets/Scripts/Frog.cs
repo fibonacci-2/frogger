@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Frog : MonoBehaviour
 {
-    public float gridSize = 1f;
+    public float gridSize = 16f;
 
     void Update()
     {

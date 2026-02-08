@@ -3,41 +3,51 @@ using UnityEngine;
 public class FrogSpawner : MonoBehaviour
 {
     public GameObject[] carPrefabs;
-    // Optional frog prefab to spawn once at start
-    public GameObject frogPrefab;
-    public bool spawnInitialFrog = true;
-    public float spawnInterval = 2f;
+    public int spawnTickInterval = 4;
+    public int spawnGridX = 0;
+    public int spawnGridY = 0;
     public SpawnDirection direction = SpawnDirection.Right;
-    private float spawnTimer = 0f;
+    public float gridSize = 16f;
+    
+    private int lastSpawnTick = 0;
 
-    void Start()
+    void Awake()
     {
-        if (spawnInitialFrog && frogPrefab != null)
-        {
-            Instantiate(frogPrefab, transform.position, Quaternion.identity);
-        }
+        if (TickManager.Instance != null)
+            TickManager.Instance.OnTick += HandleTick;
     }
 
-    void Update()
+    void OnDisable()
     {
-        spawnTimer += Time.deltaTime;
-        if (spawnTimer >= spawnInterval)
+        if (TickManager.Instance != null)
+            TickManager.Instance.OnTick -= HandleTick;
+    }
+
+    void HandleTick()
+    {
+        int currentTick = TickManager.Instance.tickCounter;
+        if (currentTick - lastSpawnTick >= spawnTickInterval)
         {
             SpawnCar();
-            float randomVariation = Random.Range(-2f, 2f);
-            spawnTimer = 0f;
-            spawnInterval += randomVariation;
+            lastSpawnTick = currentTick;
         }
     }
 
     void SpawnCar()
     {
         if (carPrefabs.Length == 0) return;
+        
+        // Spawn at grid coordinates converted to world position
+        Vector3 worldPos = new Vector3(spawnGridX * gridSize, spawnGridY * gridSize, 0);
         GameObject prefab = carPrefabs[Random.Range(0, carPrefabs.Length)];
-        GameObject car = Instantiate(prefab, transform.position, Quaternion.identity);
+        GameObject car = Instantiate(prefab, worldPos, Quaternion.identity);
+        
         Car carScript = car.GetComponent<Car>();
         if (carScript != null)
+        {
+            carScript.ticksPerMove = Random.Range(1, 4);
             carScript.direction = (int)direction;
+        }
     }
 }
 
