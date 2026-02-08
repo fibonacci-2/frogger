@@ -6,6 +6,6 @@ public class PlayAgainButton : MonoBehaviour
     public void OnClick()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.Instance.ResetGame();
     }
 }

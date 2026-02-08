@@ -10,6 +10,7 @@ public class Car : MonoBehaviour
     private int tickCounter = 0;
     private int gridX;
     private int gridY;
+    private FrogSpawner spawner;
 
     void Start()
     {
@@ -19,6 +20,11 @@ public class Car : MonoBehaviour
         gridY = Mathf.RoundToInt(transform.position.y / gridSize);
         
         Debug.Log($"Car spawned at grid ({gridX}, {gridY})");
+        
+        // Get spawner reference
+        spawner = FindObjectOfType<FrogSpawner>();
+        if (spawner != null)
+            spawner.IncrementCarCount();
         
         // Register in grid
         if (GridManager.Instance != null)
@@ -44,6 +50,10 @@ public class Car : MonoBehaviour
     {
         if (TickManager.Instance != null)
             TickManager.Instance.OnTick -= HandleTick;
+        
+        // Decrement car count when destroyed
+        if (spawner != null)
+            spawner.DecrementCarCount();
         
         // Release grid square when destroyed
         if (GridManager.Instance != null)

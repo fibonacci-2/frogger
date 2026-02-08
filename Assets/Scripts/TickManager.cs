@@ -35,4 +35,9 @@ public class TickManager : MonoBehaviour
             Debug.Log("Frog consumed all ticks! TickCounter reached " + _tickCounter);
         }
     }
+
+    public void ResetTicks()
+    {
+        _tickCounter = 0;
+    }
 }
