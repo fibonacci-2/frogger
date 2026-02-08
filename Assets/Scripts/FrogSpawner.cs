@@ -3,9 +3,20 @@ using UnityEngine;
 public class FrogSpawner : MonoBehaviour
 {
     public GameObject[] carPrefabs;
+    // Optional frog prefab to spawn once at start
+    public GameObject frogPrefab;
+    public bool spawnInitialFrog = true;
     public float spawnInterval = 2f;
     public SpawnDirection direction = SpawnDirection.Right;
     private float spawnTimer = 0f;
+
+    void Start()
+    {
+        if (spawnInitialFrog && frogPrefab != null)
+        {
+            Instantiate(frogPrefab, transform.position, Quaternion.identity);
+        }
+    }
 
     void Update()
     {
