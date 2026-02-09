@@ -54,7 +54,6 @@ public class Frog : MonoBehaviour
         // Convert world position to grid, accounting for cell center offset
         frogGridX = Mathf.RoundToInt((transform.position.x - gridSize * 0.5f) / gridSize);
         frogGridY = Mathf.RoundToInt((transform.position.y - gridSize * 0.5f) / gridSize);
-        Debug.Log($"Frog grid position updated to ({frogGridX}, {frogGridY})");
     }
 
     void CenterFrogInCell()
