@@ -11,13 +11,24 @@ public class Car : MonoBehaviour
     private int gridX;
     private int gridY;
     private FrogSpawner spawner;
+    private bool gridPositionSet = false;
+
+    public void SetGridPosition(int x, int y)
+    {
+        gridX = x;
+        gridY = y;
+        gridPositionSet = true;
+        transform.position = new Vector3(x * gridSize + gridSize * 0.5f, y * gridSize + gridSize * 0.5f, 0);
+    }
 
     void Start()
     {
-        // Initialize grid position from world position
-        // Assumes world position is already grid-aligned (gridX * gridSize, gridY * gridSize)
-        gridX = Mathf.RoundToInt(transform.position.x / gridSize);
-        gridY = Mathf.RoundToInt(transform.position.y / gridSize);
+        // If grid position wasn't explicitly set, calculate from world position
+        if (!gridPositionSet)
+        {
+            gridX = Mathf.RoundToInt(transform.position.x / gridSize);
+            gridY = Mathf.RoundToInt(transform.position.y / gridSize);
+        }
         
         Debug.Log($"Car spawned at grid ({gridX}, {gridY})");
         
@@ -35,9 +46,6 @@ public class Car : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        
-        // Ensure position is exactly on grid
-        SetGridPosition(gridX, gridY);
     }
 
     void OnEnable()
@@ -86,15 +94,9 @@ public class Car : MonoBehaviour
         if (GridManager.Instance.TryMove(new Vector2Int(gridX, gridY), new Vector2Int(newGridX, gridY), gameObject))
         {
             gridX = newGridX;
-            SetGridPosition(gridX, gridY);
+            transform.position = new Vector3(gridX * gridSize + gridSize * 0.5f, gridY * gridSize + gridSize * 0.5f, 0);
         }
         // If occupied, just wait for next tick
-    }
-
-    void SetGridPosition(int x, int y)
-    {
-        // Set position to exact grid square center
-        transform.position = new Vector3(x * gridSize + gridSize * 0.5f, y * gridSize + gridSize * 0.5f, 0);
     }
 }
 

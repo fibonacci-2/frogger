@@ -13,14 +13,12 @@ public class FrogSpawner : MonoBehaviour
     private int lastSpawnTick = 0;
     private int activeCarCount = 0;
 
-    void Awake()
-    {
-        if (TickManager.Instance != null)
-            TickManager.Instance.OnTick += HandleTick;
-    }
-
     void Start()
     {
+        // Subscribe to tick manager in Start, not Awake (ensures TickManager is initialized)
+        if (TickManager.Instance != null)
+            TickManager.Instance.OnTick += HandleTick;
+        
         // Reset state on game start
         activeCarCount = 0;
         lastSpawnTick = 0;
@@ -37,6 +35,7 @@ public class FrogSpawner : MonoBehaviour
 
     void HandleTick()
     {
+        Debug.Log("Handling tick in FrogSpawner");
         int currentTick = TickManager.Instance.tickCounter;
         if (currentTick - lastSpawnTick >= spawnTickInterval && activeCarCount < maxCarsAtOnce)
         {
@@ -58,6 +57,7 @@ public class FrogSpawner : MonoBehaviour
         Car carScript = car.GetComponent<Car>();
         if (carScript != null)
         {
+            carScript.SetGridPosition(spawnGridX, spawnGridY);
             carScript.ticksPerMove = Random.Range(1, 4);
             carScript.direction = (int)direction;
         }
