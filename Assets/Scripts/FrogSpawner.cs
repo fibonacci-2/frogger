@@ -7,7 +7,6 @@ public class FrogSpawner : MonoBehaviour
     public int spawnGridY = 0;
     public SpawnDirection direction = SpawnDirection.Right;
     public int maxCarsAtOnce = 6;
-    public int carSpeed = 1; // Number of grid squares the car moves per tick
     
     private float gridSize;
 
@@ -24,7 +23,7 @@ public class FrogSpawner : MonoBehaviour
         // Reset state on game start
         if (TickManager.Instance != null)
             TickManager.Instance.ResetTicks();
-        Debug.Log("FrogSpawner started, ready to spawn cars");
+        // Debug.Log("FrogSpawner started, ready to spawn cars");
     }
 
     void OnDisable()
@@ -35,11 +34,11 @@ public class FrogSpawner : MonoBehaviour
 
     void HandleTick()
     {
-        Debug.Log("Handling tick in FrogSpawner");
+        // Debug.Log("Handling tick in FrogSpawner");
         int currentCarCount = FindObjectsOfType<Car>().Length;
         if (currentCarCount < maxCarsAtOnce)
         {
-            Debug.Log($"Spawning car. CurrentCars: {currentCarCount}, MaxCars: {maxCarsAtOnce}");
+            // Debug.Log($"Spawning car. CurrentCars: {currentCarCount}, MaxCars: {maxCarsAtOnce}");
             SpawnCar();
         }
     }
@@ -66,7 +65,7 @@ public class FrogSpawner : MonoBehaviour
 
     public void Reset()
     {
-        Debug.Log("FrogSpawner reset");
+        // Debug.Log("FrogSpawner reset");
     }
 }
 

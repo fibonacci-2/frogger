@@ -1062,7 +1062,6 @@ MonoBehaviour:
   spawnGridY: 1
   direction: -1
   maxCarsAtOnce: 3
-  carSpeed: 1
 --- !u!1 &79001606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,7 +1772,6 @@ MonoBehaviour:
   spawnGridY: 5
   direction: 1
   maxCarsAtOnce: 3
-  carSpeed: 3
 --- !u!1 &898409242
 GameObject:
   m_ObjectHideFlags: 0
@@ -2488,8 +2486,7 @@ MonoBehaviour:
   spawnGridX: 7
   spawnGridY: 3
   direction: -1
-  maxCarsAtOnce: 3
-  carSpeed: 2
+  maxCarsAtOnce: 5
 --- !u!1 &1820226937
 GameObject:
   m_ObjectHideFlags: 0

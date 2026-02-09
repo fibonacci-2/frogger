@@ -23,18 +23,18 @@ public class TickManager : MonoBehaviour
     // Advance the game by one tick and notify listeners.
     public void AdvanceTick()
     {
-        Debug.Log("Advancing Tick. Current TickCounter: " + _tickCounter);
+        // Debug.Log("Advancing Tick. Current TickCounter: " + _tickCounter);
         _tickCounter++;
 
         if (OnTick != null)
         {
             OnTick.Invoke();
-            Debug.Log("OnTick event invoked.");
+            // Debug.Log("OnTick event invoked.");
         }
         
         if (_tickCounter >= maxTicks)
         {
-            Debug.Log("Frog consumed all ticks! TickCounter reached " + _tickCounter);
+            // Debug.Log("Frog consumed all ticks! TickCounter reached " + _tickCounter);
         }
     }
 
