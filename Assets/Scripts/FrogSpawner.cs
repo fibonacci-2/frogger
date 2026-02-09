@@ -3,25 +3,25 @@ using UnityEngine;
 public class FrogSpawner : MonoBehaviour
 {
     public GameObject[] carPrefabs;
-    public int spawnTickInterval = 4;
     public int spawnGridX = 0;
     public int spawnGridY = 0;
     public SpawnDirection direction = SpawnDirection.Right;
-    public float gridSize = 16f;
     public int maxCarsAtOnce = 6;
+    public int carSpeed = 1; // Number of grid squares the car moves per tick
     
-    private int lastSpawnTick = 0;
-    private int activeCarCount = 0;
+    private float gridSize;
 
     void Start()
     {
+        // Get grid size from GridManager
+        if (GridManager.Instance != null)
+            gridSize = GridManager.Instance.gridCellSize;
+        
         // Subscribe to tick manager in Start, not Awake (ensures TickManager is initialized)
         if (TickManager.Instance != null)
             TickManager.Instance.OnTick += HandleTick;
         
         // Reset state on game start
-        activeCarCount = 0;
-        lastSpawnTick = 0;
         if (TickManager.Instance != null)
             TickManager.Instance.ResetTicks();
         Debug.Log("FrogSpawner started, ready to spawn cars");
@@ -36,12 +36,11 @@ public class FrogSpawner : MonoBehaviour
     void HandleTick()
     {
         Debug.Log("Handling tick in FrogSpawner");
-        int currentTick = TickManager.Instance.tickCounter;
-        if (currentTick - lastSpawnTick >= spawnTickInterval && activeCarCount < maxCarsAtOnce)
+        int currentCarCount = FindObjectsOfType<Car>().Length;
+        if (currentCarCount < maxCarsAtOnce)
         {
-            Debug.Log($"Spawning car. Tick: {currentTick}, LastSpawnTick: {lastSpawnTick}, ActiveCars: {activeCarCount}");
+            Debug.Log($"Spawning car. CurrentCars: {currentCarCount}, MaxCars: {maxCarsAtOnce}");
             SpawnCar();
-            lastSpawnTick = currentTick;
         }
     }
 
@@ -58,26 +57,15 @@ public class FrogSpawner : MonoBehaviour
         if (carScript != null)
         {
             carScript.SetGridPosition(spawnGridX, spawnGridY);
-            carScript.ticksPerMove = Random.Range(1, 4);
+            // random speed
+            carScript.SetSpeed(Random.Range(1, 4));
             carScript.direction = (int)direction;
         }
-    }
-
-    public void IncrementCarCount()
-    {
-        activeCarCount++;
-    }
-
-    public void DecrementCarCount()
-    {
-        activeCarCount--;
     }
 
 
     public void Reset()
     {
-        activeCarCount = 0;
-        lastSpawnTick = 0;
         Debug.Log("FrogSpawner reset");
     }
 }

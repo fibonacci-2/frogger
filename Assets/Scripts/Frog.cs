@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class Frog : MonoBehaviour
 {
-    public float gridSize = 16f;
+    private float gridSize;
+
+    void Start()
+    {
+        // Get grid size from GridManager
+        if (GridManager.Instance != null)
+            gridSize = GridManager.Instance.gridCellSize;
+    }
 
     void Update()
     {

@@ -7,6 +7,7 @@ public class GridManager : MonoBehaviour
     public static GridManager Instance { get; private set; }
     
     private const int GRID_SIZE = 8;
+    public float gridCellSize = 16f;
     public Dictionary<Vector2Int, GameObject> occupiedSquares = new Dictionary<Vector2Int, GameObject>();
 
     void Awake()
