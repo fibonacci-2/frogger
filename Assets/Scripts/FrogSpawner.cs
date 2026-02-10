@@ -16,6 +16,10 @@ public class FrogSpawner : MonoBehaviour
         if (GridManager.Instance != null)
             gridSize = GridManager.Instance.gridCellSize;
         
+        // Subscribe to tick manager in Start, not Awake (ensures TickManager is initialized)
+        if (TickManager.Instance != null)
+            TickManager.Instance.OnTick += HandleTick;
+        
         Debug.Log($"[Spawner] Started at grid ({spawnGridX}, {spawnGridY}), direction={direction}, maxCars={maxCarsAtOnce}");
     }
 
@@ -30,7 +34,9 @@ public class FrogSpawner : MonoBehaviour
         int currentCarCount = FindObjectsOfType<Car>().Length;
         if (currentCarCount < maxCarsAtOnce)
         {
-            SpawnCar();
+            // random spawning every random ticks
+            if (Random.Range(0, 2) == 0)
+                SpawnCar();
         }
     }
 
