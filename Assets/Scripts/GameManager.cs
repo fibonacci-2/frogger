@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public static event Action OnPause;
     public static event Action OnResume;
+    public static event Action OnWin;
     
     public GameObject menuPanel;
     private bool isPaused = false;
@@ -39,6 +40,12 @@ public class GameManager : MonoBehaviour
     }
 
     public bool IsPaused() => isPaused;
+
+    public void Win()
+    {
+        OnWin?.Invoke();
+        Pause();
+    }
 
     public void ResetGame()
     {

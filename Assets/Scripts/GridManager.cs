@@ -8,6 +8,7 @@ public class GridManager : MonoBehaviour
     
     private const int GRID_SIZE = 8;
     public float gridCellSize = 16f;
+    public Vector2Int winningSquare = new Vector2Int(3, 7);  // Universal winning square
     public Dictionary<Vector2Int, GameObject> occupiedSquares = new Dictionary<Vector2Int, GameObject>();
 
     void Awake()
@@ -103,5 +104,26 @@ public class GridManager : MonoBehaviour
     public Vector3 GetGridCellCenter(Vector2Int gridPosition, float gridCellSize)
     {
         return GridToWorld(gridPosition, gridCellSize) + new Vector3(gridCellSize * 0.5f, gridCellSize * 0.5f, 0);
+    }
+
+    /// <summary>
+    /// Validates if a position is valid for movement (within bounds and not occupied, or is the winning square).
+    /// The winning square is always accessible as an exception to normal rules.
+    /// </summary>
+    public bool CanMoveToPosition(Vector2Int gridPosition)
+    {
+        // Winning square is always accessible (exception to normal rules)
+        if (gridPosition == winningSquare)
+            return true;
+
+        // Must be within bounds
+        if (!IsWithinBounds(gridPosition))
+            return false;
+
+        // Must not be occupied by another object
+        if (occupiedSquares.ContainsKey(gridPosition))
+            return false;
+
+        return true;
     }
 }

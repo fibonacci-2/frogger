@@ -25,27 +25,39 @@ public class Frog : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            transform.Translate(Vector3.up * gridSize);
-            TickManager.Instance?.AdvanceTick();
-            CheckCollisionWithCars();
+            if (TryMove(0, 1))
+            {
+                TickManager.Instance?.AdvanceTick();
+                CheckWinCondition();
+                CheckCollisionWithCars();
+            }
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            transform.Translate(Vector3.down * gridSize);
-            TickManager.Instance?.AdvanceTick();
-            CheckCollisionWithCars();
+            if (TryMove(0, -1))
+            {
+                TickManager.Instance?.AdvanceTick();
+                CheckWinCondition();
+                CheckCollisionWithCars();
+            }
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            transform.Translate(Vector3.left * gridSize);
-            TickManager.Instance?.AdvanceTick();
-            CheckCollisionWithCars();
+            if (TryMove(-1, 0))
+            {
+                TickManager.Instance?.AdvanceTick();
+                CheckWinCondition();
+                CheckCollisionWithCars();
+            }
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            transform.Translate(Vector3.right * gridSize);
-            TickManager.Instance?.AdvanceTick();
-            CheckCollisionWithCars();
+            if (TryMove(1, 0))
+            {
+                TickManager.Instance?.AdvanceTick();
+                CheckWinCondition();
+                CheckCollisionWithCars();
+            }
         }
     }
 
@@ -75,5 +87,39 @@ public class Frog : MonoBehaviour
             if (occupant != null && occupant.CompareTag("car"))
                 GameManager.Instance.Pause();
         }
+    }
+
+    void CheckWinCondition()
+    {
+        UpdateFrogGridPosition();
+        
+        if (GridManager.Instance != null)
+        {
+            Vector2Int frogCell = new Vector2Int(frogGridX, frogGridY);
+            Vector2Int winSquare = GridManager.Instance.winningSquare;
+            
+            // If frog reached the winning square, notify GameManager
+            if (frogCell == winSquare)
+                GameManager.Instance.Win();
+        }
+    }
+
+    bool TryMove(int deltaX, int deltaY)
+    {
+        int newGridX = frogGridX + deltaX;
+        int newGridY = frogGridY + deltaY;
+        Vector2Int newPosition = new Vector2Int(newGridX, newGridY);
+
+        // Check if new position is valid (within bounds, not occupied, or is the winning square)
+        if (!GridManager.Instance.CanMoveToPosition(newPosition))
+        {
+            return false; // Movement blocked, stay in place
+        }
+
+        // Move to new grid position
+        frogGridX = newGridX;
+        frogGridY = newGridY;
+        CenterFrogInCell();
+        return true;
     }
 }
