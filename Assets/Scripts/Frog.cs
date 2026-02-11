@@ -16,18 +16,15 @@ public class Frog : MonoBehaviour
 
     void Start()
     {
-        // Get grid size from GridManager
         if (GridManager.Instance != null)
             gridSize = GridManager.Instance.gridCellSize;
         
-        // Initialize frog grid position and center it in its cell
         UpdateFrogGridPosition();
         CenterFrogInCell();
     }
 
     void Update()
     {
-        // Only player-controlled frogs should read input and advance time
         if (!isPlayerControlled)
             return;
 
@@ -90,14 +87,12 @@ public class Frog : MonoBehaviour
 
     void UpdateFrogGridPosition()
     {
-        // Convert world position to grid, accounting for cell center offset
         frogGridX = Mathf.RoundToInt((transform.position.x - gridSize * 0.5f) / gridSize);
         frogGridY = Mathf.RoundToInt((transform.position.y - gridSize * 0.5f) / gridSize);
     }
 
     void CenterFrogInCell()
     {
-        // Position frog at the center of its grid cell
         transform.position = new Vector3(frogGridX * gridSize + gridSize * 0.5f, frogGridY * gridSize + gridSize * 0.5f, 0);
     }
 
@@ -110,7 +105,6 @@ public class Frog : MonoBehaviour
             Vector2Int frogCell = new Vector2Int(frogGridX, frogGridY);
             GameObject occupant = GridManager.Instance.GetOccupant(frogCell);
             
-            // If cell is occupied by a car, pause the game
             if (occupant != null && occupant.CompareTag("car"))
                 GameManager.Instance.Pause();
         }
@@ -125,7 +119,6 @@ public class Frog : MonoBehaviour
             Vector2Int frogCell = new Vector2Int(frogGridX, frogGridY);
             Vector2Int winSquare = GridManager.Instance.GetWinningSquare(controlScheme);
             
-            // If frog reached the winning square, notify GameManager
             if (frogCell == winSquare)
                 GameManager.Instance.Win();
         }
@@ -137,16 +130,40 @@ public class Frog : MonoBehaviour
         int newGridY = frogGridY + deltaY;
         Vector2Int newPosition = new Vector2Int(newGridX, newGridY);
 
-        // Check if new position is valid (within bounds, not occupied, or is the frog's winning square)
         if (!GridManager.Instance.CanMoveToPosition(newPosition, controlScheme))
         {
-            return false; // Movement blocked, stay in place
+            return false;
         }
 
-        // Move to new grid position
+        if (IsOtherFrogBlocking(newPosition))
+        {
+            return false;
+        }
+
         frogGridX = newGridX;
         frogGridY = newGridY;
         CenterFrogInCell();
         return true;
+    }
+
+    bool IsOtherFrogBlocking(Vector2Int targetPosition)
+    {
+        Frog[] frogs = FindObjectsOfType<Frog>();
+        for (int i = 0; i < frogs.Length; i++)
+        {
+            if (frogs[i] == this)
+                continue;
+
+            Vector2Int otherPosition = frogs[i].GetGridPosition();
+            if (otherPosition == targetPosition)
+                return true;
+        }
+
+        return false;
+    }
+
+    Vector2Int GetGridPosition()
+    {
+        return new Vector2Int(frogGridX, frogGridY);
     }
 }

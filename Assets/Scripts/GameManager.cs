@@ -49,22 +49,18 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        // Reset tick manager
         if (TickManager.Instance != null)
             TickManager.Instance.ResetTicks();
         
-        // Destroy all cars
         Car[] allCars = FindObjectsOfType<Car>();
         foreach (Car car in allCars)
             Destroy(car.gameObject);
         
-        // Clear grid
         if (GridManager.Instance != null)
         {
             GridManager.Instance.occupiedSquares.Clear();
         }
         
-        // Reset spawner state
         FrogSpawner spawner = FindObjectOfType<FrogSpawner>();
         if (spawner != null)
             spawner.Reset();
