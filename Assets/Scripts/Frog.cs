@@ -36,7 +36,7 @@ public class Frog : MonoBehaviour
 
         if (Input.GetKeyDown(upKey))
         {
-            if (TryMove(0, 1))
+            if (CanMoveUp() && TryMove(0, 1))
             {
                 TickManager.Instance?.AdvanceTick();
                 GameManager.Instance?.CheckWinCondition();
@@ -163,6 +163,23 @@ public class Frog : MonoBehaviour
 
             Vector2Int otherPosition = frogs[i].GetGridPosition();
             if (otherPosition == targetPosition)
+                return true;
+        }
+
+        return false;
+    }
+
+    bool CanMoveUp()
+    {
+        Frog[] frogs = FindObjectsOfType<Frog>();
+        for (int i = 0; i < frogs.Length; i++)
+        {
+            if (frogs[i] == this)
+                continue;
+
+            Vector2Int otherPosition = frogs[i].GetGridPosition();
+            int yDistance = frogGridY - otherPosition.y;
+            if (yDistance <= 2)
                 return true;
         }
 

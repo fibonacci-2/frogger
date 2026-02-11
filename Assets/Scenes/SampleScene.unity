@@ -841,7 +841,7 @@ MonoBehaviour:
   spawnGridX: 7
   spawnGridY: 1
   direction: -1
-  maxCarsAtOnce: 5
+  maxCarsAtOnce: 4
 --- !u!1 &79001606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,7 +1778,7 @@ MonoBehaviour:
   spawnGridX: 0
   spawnGridY: 4
   direction: 1
-  maxCarsAtOnce: 5
+  maxCarsAtOnce: 4
 --- !u!1 &681703410
 GameObject:
   m_ObjectHideFlags: 0
@@ -2843,7 +2843,7 @@ MonoBehaviour:
   spawnGridX: 0
   spawnGridY: 2
   direction: 1
-  maxCarsAtOnce: 5
+  maxCarsAtOnce: 4
 --- !u!1 &1820226937
 GameObject:
   m_ObjectHideFlags: 0
@@ -3722,7 +3722,7 @@ MonoBehaviour:
   spawnGridX: 7
   spawnGridY: 3
   direction: -1
-  maxCarsAtOnce: 5
+  maxCarsAtOnce: 4
 --- !u!1 &2033512927
 GameObject:
   m_ObjectHideFlags: 0
@@ -3774,7 +3774,7 @@ MonoBehaviour:
   spawnGridX: 7
   spawnGridY: 5
   direction: -1
-  maxCarsAtOnce: 5
+  maxCarsAtOnce: 4
 --- !u!1 &2043582258
 GameObject:
   m_ObjectHideFlags: 0
