@@ -8,7 +8,11 @@ public class GridManager : MonoBehaviour
     
     private const int GRID_SIZE = 8;
     public float gridCellSize = 16f;
-    public Vector2Int winningSquare = new Vector2Int(3, 7);  // Universal winning square
+    public Vector2Int[] winningSquares =
+    {
+        new Vector2Int(4, 8), // Arrows frog
+        new Vector2Int(3, 8)  // WASD frog
+    };
     public Dictionary<Vector2Int, GameObject> occupiedSquares = new Dictionary<Vector2Int, GameObject>();
 
     void Awake()
@@ -107,14 +111,55 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Validates if a position is valid for movement (within bounds and not occupied, or is the winning square).
-    /// The winning square is always accessible as an exception to normal rules.
+    /// Gets the winning square for a specific control scheme.
     /// </summary>
-    public bool CanMoveToPosition(Vector2Int gridPosition)
+    public Vector2Int GetWinningSquare(Frog.ControlScheme controlScheme)
     {
-        // Winning square is always accessible (exception to normal rules)
-        if (gridPosition == winningSquare)
+        int index = controlScheme == Frog.ControlScheme.WASD ? 1 : 0;
+        if (winningSquares == null || winningSquares.Length <= index)
+            return new Vector2Int(4, 8);
+
+        return winningSquares[index];
+    }
+
+    /// <summary>
+    /// Checks if a position is any of the winning squares.
+    /// </summary>
+    public bool IsWinningSquare(Vector2Int gridPosition)
+    {
+        if (winningSquares == null)
+            return false;
+
+        for (int i = 0; i < winningSquares.Length; i++)
+        {
+            if (winningSquares[i] == gridPosition)
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if a position is the winning square for a specific control scheme.
+    /// </summary>
+    public bool IsWinningSquareForScheme(Vector2Int gridPosition, Frog.ControlScheme controlScheme)
+    {
+        return gridPosition == GetWinningSquare(controlScheme);
+    }
+
+    /// <summary>
+    /// Validates if a position is valid for movement (within bounds and not occupied, or is the frog's winning square).
+    /// Only the frog's own winning square is accessible as an exception to normal rules.
+    /// </summary>
+    public bool CanMoveToPosition(Vector2Int gridPosition, Frog.ControlScheme controlScheme)
+    {
+        // Only allow the frog's own winning square as an exception
+        if (IsWinningSquareForScheme(gridPosition, controlScheme))
             return true;
+
+        // Block entry into the other frog's winning square
+        if (IsWinningSquare(gridPosition))
+            return false;
 
         // Must be within bounds
         if (!IsWithinBounds(gridPosition))

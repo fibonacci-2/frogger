@@ -2,6 +2,14 @@ using UnityEngine;
 
 public class Frog : MonoBehaviour
 {
+    public enum ControlScheme
+    {
+        Arrows,
+        WASD
+    }
+
+    [SerializeField] private ControlScheme controlScheme = ControlScheme.Arrows;
+    [SerializeField] private bool isPlayerControlled = true;
     private float gridSize;
     private int frogGridX;
     private int frogGridY;
@@ -19,11 +27,13 @@ public class Frog : MonoBehaviour
 
     void Update()
     {
-        // Only the player-controlled frog should read input and advance time
-        if (!gameObject.CompareTag("Player"))
+        // Only player-controlled frogs should read input and advance time
+        if (!isPlayerControlled)
             return;
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        GetMovementKeys(out KeyCode upKey, out KeyCode downKey, out KeyCode leftKey, out KeyCode rightKey);
+
+        if (Input.GetKeyDown(upKey))
         {
             if (TryMove(0, 1))
             {
@@ -32,7 +42,7 @@ public class Frog : MonoBehaviour
                 CheckCollisionWithCars();
             }
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(downKey))
         {
             if (TryMove(0, -1))
             {
@@ -41,7 +51,7 @@ public class Frog : MonoBehaviour
                 CheckCollisionWithCars();
             }
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(leftKey))
         {
             if (TryMove(-1, 0))
             {
@@ -50,7 +60,7 @@ public class Frog : MonoBehaviour
                 CheckCollisionWithCars();
             }
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(rightKey))
         {
             if (TryMove(1, 0))
             {
@@ -59,6 +69,23 @@ public class Frog : MonoBehaviour
                 CheckCollisionWithCars();
             }
         }
+    }
+
+    void GetMovementKeys(out KeyCode upKey, out KeyCode downKey, out KeyCode leftKey, out KeyCode rightKey)
+    {
+        if (controlScheme == ControlScheme.WASD)
+        {
+            upKey = KeyCode.W;
+            downKey = KeyCode.S;
+            leftKey = KeyCode.A;
+            rightKey = KeyCode.D;
+            return;
+        }
+
+        upKey = KeyCode.UpArrow;
+        downKey = KeyCode.DownArrow;
+        leftKey = KeyCode.LeftArrow;
+        rightKey = KeyCode.RightArrow;
     }
 
     void UpdateFrogGridPosition()
@@ -96,7 +123,7 @@ public class Frog : MonoBehaviour
         if (GridManager.Instance != null)
         {
             Vector2Int frogCell = new Vector2Int(frogGridX, frogGridY);
-            Vector2Int winSquare = GridManager.Instance.winningSquare;
+            Vector2Int winSquare = GridManager.Instance.GetWinningSquare(controlScheme);
             
             // If frog reached the winning square, notify GameManager
             if (frogCell == winSquare)
@@ -110,8 +137,8 @@ public class Frog : MonoBehaviour
         int newGridY = frogGridY + deltaY;
         Vector2Int newPosition = new Vector2Int(newGridX, newGridY);
 
-        // Check if new position is valid (within bounds, not occupied, or is the winning square)
-        if (!GridManager.Instance.CanMoveToPosition(newPosition))
+        // Check if new position is valid (within bounds, not occupied, or is the frog's winning square)
+        if (!GridManager.Instance.CanMoveToPosition(newPosition, controlScheme))
         {
             return false; // Movement blocked, stay in place
         }
