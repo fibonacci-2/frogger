@@ -111,6 +111,21 @@ public class Car : MonoBehaviour
             moveTargets.Enqueue(target);
             if (!isProcessingMoveQueue)
                 StartCoroutine(ProcessMoveQueue());
+            
+            CheckCollisionWithFrogsAtPosition(new Vector2Int(gridX, gridY));
+        }
+    }
+
+    void CheckCollisionWithFrogsAtPosition(Vector2Int carPosition)
+    {
+        Frog[] frogs = FindObjectsOfType<Frog>();
+        for (int i = 0; i < frogs.Length; i++)
+        {
+            if (frogs[i].GetGridPosition() == carPosition)
+            {
+                GameManager.Instance.Pause();
+                return;
+            }
         }
     }
 

@@ -13,6 +13,8 @@ public class Frog : MonoBehaviour
     private float gridSize;
     private int frogGridX;
     private int frogGridY;
+    private int startGridX;
+    private int startGridY;
 
     void Start()
     {
@@ -20,13 +22,15 @@ public class Frog : MonoBehaviour
             gridSize = GridManager.Instance.gridCellSize;
         
         UpdateFrogGridPosition();
+        startGridX = frogGridX;
+        startGridY = frogGridY;
         CenterFrogInCell();
     }
 
     void Update()
     {
-        if (!isPlayerControlled)
-            return;
+        // if (!isPlayerControlled)
+        //     return;
 
         GetMovementKeys(out KeyCode upKey, out KeyCode downKey, out KeyCode leftKey, out KeyCode rightKey);
 
@@ -35,8 +39,8 @@ public class Frog : MonoBehaviour
             if (TryMove(0, 1))
             {
                 TickManager.Instance?.AdvanceTick();
-                CheckWinCondition();
-                CheckCollisionWithCars();
+                GameManager.Instance?.CheckWinCondition();
+                CheckAllFrogsCollision();
             }
         }
         if (Input.GetKeyDown(downKey))
@@ -44,8 +48,8 @@ public class Frog : MonoBehaviour
             if (TryMove(0, -1))
             {
                 TickManager.Instance?.AdvanceTick();
-                CheckWinCondition();
-                CheckCollisionWithCars();
+                GameManager.Instance?.CheckWinCondition();
+                CheckAllFrogsCollision();
             }
         }
         if (Input.GetKeyDown(leftKey))
@@ -53,8 +57,8 @@ public class Frog : MonoBehaviour
             if (TryMove(-1, 0))
             {
                 TickManager.Instance?.AdvanceTick();
-                CheckWinCondition();
-                CheckCollisionWithCars();
+                GameManager.Instance?.CheckWinCondition();
+                CheckAllFrogsCollision();
             }
         }
         if (Input.GetKeyDown(rightKey))
@@ -62,8 +66,8 @@ public class Frog : MonoBehaviour
             if (TryMove(1, 0))
             {
                 TickManager.Instance?.AdvanceTick();
-                CheckWinCondition();
-                CheckCollisionWithCars();
+                GameManager.Instance?.CheckWinCondition();
+                CheckAllFrogsCollision();
             }
         }
     }
@@ -110,18 +114,21 @@ public class Frog : MonoBehaviour
         }
     }
 
-    void CheckWinCondition()
+    void CheckAllFrogsCollision()
+    {
+        Frog[] frogs = FindObjectsOfType<Frog>();
+        for (int i = 0; i < frogs.Length; i++)
+        {
+            frogs[i].CheckCollisionWithCars();
+        }
+    }
+
+    public bool IsOnWinningSquare()
     {
         UpdateFrogGridPosition();
-        
-        if (GridManager.Instance != null)
-        {
-            Vector2Int frogCell = new Vector2Int(frogGridX, frogGridY);
-            Vector2Int winSquare = GridManager.Instance.GetWinningSquare(controlScheme);
-            
-            if (frogCell == winSquare)
-                GameManager.Instance.Win();
-        }
+        Vector2Int frogCell = new Vector2Int(frogGridX, frogGridY);
+        Vector2Int winSquare = GridManager.Instance.GetWinningSquare(controlScheme);
+        return frogCell == winSquare;
     }
 
     bool TryMove(int deltaX, int deltaY)
@@ -162,8 +169,15 @@ public class Frog : MonoBehaviour
         return false;
     }
 
-    Vector2Int GetGridPosition()
+    public Vector2Int GetGridPosition()
     {
         return new Vector2Int(frogGridX, frogGridY);
+    }
+
+    public void ResetToStartPosition()
+    {
+        frogGridX = startGridX;
+        frogGridY = startGridY;
+        CenterFrogInCell();
     }
 }

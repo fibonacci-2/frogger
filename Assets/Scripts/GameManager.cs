@@ -47,6 +47,26 @@ public class GameManager : MonoBehaviour
         Pause();
     }
 
+    public void CheckWinCondition()
+    {
+        Frog[] frogs = FindObjectsOfType<Frog>();
+        if (frogs.Length < 2)
+            return;
+
+        bool allFrogsWon = true;
+        for (int i = 0; i < frogs.Length; i++)
+        {
+            if (!frogs[i].IsOnWinningSquare())
+            {
+                allFrogsWon = false;
+                break;
+            }
+        }
+
+        if (allFrogsWon)
+            Win();
+    }
+
     public void ResetGame()
     {
         if (TickManager.Instance != null)
@@ -55,6 +75,10 @@ public class GameManager : MonoBehaviour
         Car[] allCars = FindObjectsOfType<Car>();
         foreach (Car car in allCars)
             Destroy(car.gameObject);
+        
+        Frog[] allFrogs = FindObjectsOfType<Frog>();
+        foreach (Frog frog in allFrogs)
+            frog.ResetToStartPosition();
         
         if (GridManager.Instance != null)
         {

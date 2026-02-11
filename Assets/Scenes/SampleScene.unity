@@ -2790,8 +2790,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridCellSize: 16
   winningSquares:
-  - {x: 3, y: 7}
-  - {x: 4, y: 7}
+  - {x: 4, y: 8}
+  - {x: 3, y: 8}
 --- !u!1 &1814221646
 GameObject:
   m_ObjectHideFlags: 0
@@ -3832,7 +3832,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8, y: 8.666667}
+    oldSize: {x: 8, y: 9.333333}
     newSize: {x: 0.75, y: 0.9375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -3898,7 +3898,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 1903883682, guid: b1177968d62358f43a59eb044ee802bd, type: 3}
+  m_Sprite: {fileID: -1468741480, guid: b1177968d62358f43a59eb044ee802bd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
